@@ -32,7 +32,7 @@ export default function MarkdownPreview({
 				},
 				code: ({ node, className, children, ...props }) => {
 					const match = /language-(\w+)/.exec(className || "");
-					const id = (Math.floor(Math.random() * 100) + 1).toString();
+
 					if (match?.length) {
 						let Icon = PiTerminalThin;
 						const isMatch = icons.hasOwnProperty(match[1]);
@@ -40,6 +40,9 @@ export default function MarkdownPreview({
 							Icon = icons[match[1] as keyof typeof icons];
 						}
 
+						const id = (
+							Math.floor(Math.random() * 100) + 1
+						).toString();
 						return (
 							<div className=" bg-graident-dark text-gray-300 border rounded-md">
 								<div className=" px-5 py-2 border-b flex items-center justify-between">
