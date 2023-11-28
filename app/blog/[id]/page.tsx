@@ -1,6 +1,7 @@
 import { IBlog } from "@/lib/types";
 import Image from "next/image";
 import React from "react";
+import BlogContent from "./components/BlogContent";
 
 export default async function page({ params }: { params: { id: string } }) {
 	const { data: blog } = (await fetch(
@@ -29,6 +30,7 @@ export default async function page({ params }: { params: { id: string } }) {
 					sizes="(max-width: 768px) 100vw, (max-width: 1200px): 50vw, 33vw"
 				/>
 			</div>
+			<BlogContent blogId={blog.id} />
 		</div>
 	);
 }
