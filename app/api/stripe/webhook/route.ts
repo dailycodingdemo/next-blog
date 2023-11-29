@@ -34,8 +34,19 @@ export async function POST(requset: any) {
 					customer.email!
 				);
 				if (error?.message) {
-					return Response.json({ error: error.message });
+					return Response.json({
+						error: "Unable to do subscription " + error.message,
+					});
 				}
+			}
+			break;
+		case "customer.subscription.deleted":
+			const deleteSub = event.data.object;
+			const { error } = await onCancelSubscription(false, deleteSub.id);
+			if (error?.message) {
+				return Response.json({
+					error: "fail to cancel subscription" + error.message,
+				});
 			}
 			break;
 		default:
@@ -43,6 +54,21 @@ export async function POST(requset: any) {
 	}
 	return Response.json({});
 }
+
+const onCancelSubscription = async (
+	subscription_status: boolean,
+	sub_id: string
+) => {
+	const supbaseAdmin = await createSupabaseAdmin();
+	return await supbaseAdmin
+		.from("users")
+		.update({
+			subscription_status,
+			stripe_subscription_id: null,
+			stripe_customer_id: null,
+		})
+		.eq("stripe_subscription_id", sub_id);
+};
 
 const onSuccessSubscription = async (
 	subscription_status: boolean,
